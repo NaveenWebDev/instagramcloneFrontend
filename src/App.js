@@ -8,16 +8,18 @@ function App() {
     <>
     <div className="flex justify-between">
 
-  <header className="w-[18%] h-screen sticky top-0 left-0">
+  <header className="w-[23%] h-screen sticky top-0 left-0">
     <Navbar></Navbar>
   </header>
+        <div className="w-[50%]">
 
           <Routes>
             <Route path="/" element={<Home></Home>} />
             <Route path="/about" element={<h1>this is about page</h1>} />
           </Routes>
+        </div>
 
-          <div className="w-[27%] h-screen sticky right-0 top-0 border border-l-gray-400">
+          <div className="w-[27%] h-screen sticky right-0 top-0">
               <RightSiderBar></RightSiderBar>
           </div>
 
