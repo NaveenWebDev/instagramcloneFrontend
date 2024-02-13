@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
@@ -16,7 +16,7 @@ const Navbar = () => {
     <>
       <nav className="border border-r-gray-300 h-screen px-7 ">
         <ul className="flex flex-col justify-between h-full pb-5">
-          <img src="logo.png" alt="logo" width="60%" className="pb-5 pt-10" />
+          <img src="/logo.png" alt="logo" width="60%" className="pb-5 pt-10" />
           <li>
             <NavLink to="/">
               {" "}
@@ -67,7 +67,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/notifications">
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 {" "}
                 <FavoriteBorderOutlinedIcon
                   sx={{ fontSize: "35px", marginRight: "0.5rem" }}
@@ -78,7 +78,7 @@ const Navbar = () => {
           </li>
           <li>
             <span>
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer cursor-pointer">
                 {" "}
                 <AddBoxOutlinedIcon
                   sx={{ fontSize: "35px", marginRight: "0.5rem" }}
@@ -89,23 +89,23 @@ const Navbar = () => {
           </li>
           <li>
             <span>
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 {" "}
                 <Avatar src={profileImg}
                   sx={{ width: 33, height: 33, marginRight: "0.5rem" }}
                 />{" "}
-                Profile{" "}
+                <Link to="/profile">Profile</Link>
               </div>
             </span>
           </li>
           <li>
             <span>
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 {" "}
                 <MenuOutlinedIcon
                   sx={{ fontSize: "35px", marginRight: "0.5rem" }}
                 />{" "}
-                More{" "}
+                More
               </div>
             </span>
           </li>

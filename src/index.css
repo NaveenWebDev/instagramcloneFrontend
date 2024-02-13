@@ -7,3 +7,12 @@
     width: 90%;
     margin: auto;
 }
+.profileimg div{
+    transition: all 0.3s;
+    display: grid;
+    place-items: center;
+}
+
+.profileimg:hover div{
+    width: 100%;
+}

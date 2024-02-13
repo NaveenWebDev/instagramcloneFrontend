@@ -1,7 +1,6 @@
 import React from 'react'
 import Post from '../Component/Post'
 
-
 const Home = () => {
   return (
     <div className='overflow-auto h-screen'>
@@ -24,8 +23,6 @@ const Home = () => {
       </div>
 
     </div>
-
-
       
       </div>
 
