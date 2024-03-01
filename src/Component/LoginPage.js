@@ -1,77 +1,98 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate()
 
-    const [signup , setSignup] = useState(false)
+  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues: {
+        email:"",
+        password:"",
+    },
+    onSubmit: (value, action) => {
+      console.log(value);
+      action.resetForm();
+    },
+  });
 
+  // const signupCall =
   return (
     <>
-        <div className="w-screen h-screen m-auto">
-            <div className="h-full w-[80%] max-w-[1200px] m-auto">
-                <div className="flex justify-between w-[80%] h-full m-auto">
-                {
-                    signup?null:(<div className="w-[50%] grid place-items-center">
-                    <img src="SignUpImg.png" alt="signup" />
-                </div>)
-                }
-                
-                <div className="w-[50%] flex flex-col p-10 m-auto">
-
-                    <form className='flex flex-col gap-3 border p-8 mb-3'>
-                    <img src="logo.png" alt="" height="100px" width="60%" className='m-auto my-5' />
-                    
-                        <input type="email" name="email" id="email" className='border p-3' placeholder='enter your email' />
-
-                        {
-                            signup?(
-                                <>
-                                <input type="text" name="fullName" id="fullName" className='border p-3' placeholder='enter your fullName' />
-                                <input type="text" name="userName" id="userName" className='border p-3' placeholder='enter your userName' />
-                                </>
-                            ):null
-                        }
-
-                        <input type="password" name="email" id="email" className='border p-3' placeholder='enter your password' />
-
-                        {
-                            signup?(
-                                <input type="submit" value="Sign Up" className='border p-3 bg-blue-600 text-white rounded-md' />
-                            ):(
-                                <input type="submit" value="Log in" className='border p-3 bg-blue-600 text-white rounded-md' />
-                            )
-                        }
-
-
-                    <span className='w-[100%] text-center my-5 text-blue-800 cursor-pointer'>Forgot password?</span>
-                    {
-                            signup?(
-                                <span className='text-blue-600 cursor-pointer text-center mx-1' onClick={()=>setSignup(false)}>Sign In</span>
-                            ):null
-                        }
-                    </form>
-                    {
-                        signup?null:(
-                            <div className=' border p-5'>
-                        <p className='text-center mx-2'>Don't have an account? 
-                        {
-                            signup?(
-                                <span className='text-blue-600 cursor-pointer mx-1' onClick={()=>setSignup(false)}>Sign In</span>
-                            ):(
-                                <span className='text-blue-600 cursor-pointer mx-1' onClick={()=>setSignup(true)}>Sign up</span>
-                            )
-                        }
-                        </p>
-                    </div>
-                        )
-                    }
-
-
-                </div>
-                </div>
+      <div className=" h-screen m-auto">
+        <div className="h-full w-[100%] max-w-[1200px] m-auto">
+          <div className="flex justify-between w-[100%] h-full m-auto">
+ 
+            <div className="w-[50%] grid place-items-center">
+                <img src="SignUpImg.png" alt="signup" />
             </div>
-        </div>
-    </>
-  )
-}
 
-export default LoginPage
+
+            <div
+              className={`w-[50%] flex flex-col p-10 m-auto`}
+            >
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-3 border p-5 mb-3 shadow"
+              >
+                <img
+                  src="logo.png"
+                  alt=""
+                  height="100px"
+                  width="80%"
+                  className="m-auto my-5"
+                />
+
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="border p-3"
+                  placeholder="enter your email"
+                  value={values.email}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  className="border p-3"
+                  placeholder="enter your password"
+                  value={values.password}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                  <input
+                    type="submit"
+                    value="Log in"
+                    className="border p-3 bg-blue-600 text-white rounded-md cursor-pointer"
+                  />
+
+                <span className="w-[100%] text-center my-5 text-blue-800 cursor-pointer">
+                  Forgot password?
+                </span>
+              </form>
+
+              
+                <div className=" border p-5 shadow">
+                  <p className="text-center mx-2 text-[0.8rem]">
+                    Don't have an account?
+                      <span 
+                        className="text-blue-600 cursor-pointer mx-1"
+                        onClick={() => navigate("/sign-up")}
+                      >
+                        Sign Up
+                      </span>
+                  </p>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default LoginPage;
