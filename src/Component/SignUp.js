@@ -7,7 +7,8 @@ import * as Yup from "yup";
 
 const SignUp = () => {
   const navigate = useNavigate()
-  const apiUrl = "http://localhost:4000";
+  const apiUrl = process.env.REACT_APP_MAIN_URL;
+  console.log(apiUrl)
 
   const signupSchema = Yup.object({
     email:Yup.string().email().required("email is required"),

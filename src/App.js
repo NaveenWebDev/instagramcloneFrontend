@@ -12,7 +12,9 @@ import { ToastContainer } from "react-toastify";
 
 
 function App() {
-  const [token, setToken ] = useState(false);
+
+  let storedToken = localStorage.getItem("token")
+  const [token, setToken ] = useState(storedToken);
   const [userData, setUserData] = useState({});
 
   const navigate = useNavigate()

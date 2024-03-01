@@ -1,24 +1,45 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
 
 const LoginPage = () => {
   const navigate = useNavigate()
+
+  const apiUrl = process.env.REACT_APP_MAIN_URL;
+
+  const signInSchema = Yup.object({
+    email:Yup.string().email().required("email is required"),
+    password:Yup.string().min(6).required("password is required"),
+  })
 
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
         email:"",
         password:"",
     },
-    onSubmit: (value, action) => {
-      console.log(value);
-      action.resetForm();
+    validationSchema:signInSchema,
+    onSubmit: async (value, action) => {
+      const result = await axios.post(apiUrl+"/api/v1/login", value)
+      .then((val)=>{
+        toast.success("Login Successfully")
+        localStorage.setItem("token", JSON.stringify(val?.data?.userData?.token))
+        action.resetForm();
+        navigate("/")
+      })
+      .catch((err)=>{
+        toast.error(err.response.data.message)
+        console.log(err.message)
+      })
+
     },
   });
 
-  // const signupCall =
   return (
     <>
+        <ToastContainer/>
       <div className=" h-screen m-auto">
         <div className="h-full w-[100%] max-w-[1200px] m-auto">
           <div className="flex justify-between w-[100%] h-full m-auto">
@@ -26,7 +47,6 @@ const LoginPage = () => {
             <div className="w-[50%] grid place-items-center">
                 <img src="SignUpImg.png" alt="signup" />
             </div>
-
 
             <div
               className={`w-[50%] flex flex-col p-10 m-auto`}
@@ -53,6 +73,7 @@ const LoginPage = () => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
+                                <p className="text-red-600 m-0 p-0">{errors.email}</p>
                 <input
                   type="password"
                   name="password"
@@ -63,6 +84,7 @@ const LoginPage = () => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
+                                <p className="text-red-600 m-0 p-0">{errors.password}</p>
                   <input
                     type="submit"
                     value="Log in"
