@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
+import {GlobalUserData} from "../App"
+
 
 const LoginPage = () => {
   const navigate = useNavigate()
 
   const apiUrl = process.env.REACT_APP_MAIN_URL;
+  const userDatas = useContext(GlobalUserData);
 
   const signInSchema = Yup.object({
     email:Yup.string().email().required("email is required"),
@@ -27,7 +30,8 @@ const LoginPage = () => {
         toast.success("Login Successfully")
         localStorage.setItem("token", JSON.stringify(val?.data?.userData?.token))
         action.resetForm();
-        navigate("/")
+        navigate("/");
+        userDatas.setToken(val?.data?.userData?.token)
       })
       .catch((err)=>{
         toast.error(err.response.data.message)

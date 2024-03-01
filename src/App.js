@@ -5,55 +5,36 @@ import Home from "./Pages/Home";
 import LoginPage from "./Component/LoginPage";
 import { Profiler, useEffect, useState } from "react";
 import Profile from "./Pages/Profile";
-import axios from 'axios';
 import SignUp from "./Component/SignUp";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { createContext  } from "react";
 
+const GlobalUserData = createContext();
 
 function App() {
-
-  let storedToken = localStorage.getItem("token")
-  const [token, setToken ] = useState(storedToken);
-  const [userData, setUserData] = useState({});
-
-  const navigate = useNavigate()
-
-  const locate = useLocation();
-  const baseUrl = "http://localhost:4000"
   
-  //check login or not
+  let storedToken = localStorage.getItem("token")
+  let userDatas = localStorage.getItem("userData")
+  const [token, setToken ] = useState(storedToken);
+  const [userData, setUserData] = useState(userDatas);
+  const navigate = useNavigate()
+  const locate = useLocation();
 
-  const checkLogin = async()=>{
-    const data = {
-      "email":"naveensharma@gmail.com",
-      "password":"123456"
-  }
-    try{
-      const loginData = await axios.post(baseUrl + "/api/v1/login" , data)
-      // setToken(loginData.data.userData.token)
-      setUserData(loginData.data.userData.user)
-    }catch(err){
-      console.log(err.message)
+  const checkLoginOrNot = ()=>{
+    if(token){
+      navigate("/")
+    }else{
+      navigate("/login")
     }
-
   }
-
-  // const checkLoginOrNot = ()=>{
-  //   if(token){
-  //     navigate("/")
-  //   }else{
-  //     navigate("/login")
-  //   }
-  // }
   
   useEffect(()=>{
-    checkLogin()
-    // checkLoginOrNot()
-  },[])
-
+    checkLoginOrNot()
+  },[token])
+  const userobject = JSON.parse(userData)
   return (
-    <>
+    <GlobalUserData.Provider value={{token, setToken , userobject }}>
       <ToastContainer/>
       <div className="flex justify-between overflow-x-hidden">
         {token?
@@ -87,8 +68,9 @@ function App() {
           </div>
         ):null}
       </div>
-    </>
+    </GlobalUserData.Provider>
   );
 }
 
 export default App;
+export {GlobalUserData};
