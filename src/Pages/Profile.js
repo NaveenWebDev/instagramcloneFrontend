@@ -8,8 +8,8 @@ const Profile = () => {
   return (
     <>
       <div className="max-w-[900px] w-[90%] m-auto pb-10">
-        <div className="flex items-center">
-          <div className="h-[200px]  rounded-full w-[200px]">
+        <div className="flex flex-col md:flex-row items-center">
+          <div className="h-[200px] rounded-full w-[200px]">
             <img
               src={profileImg}
               alt="profileImg"

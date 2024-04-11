@@ -46,14 +46,14 @@ const LoginPage = () => {
         <ToastContainer/>
       <div className=" h-screen m-auto">
         <div className="h-full w-[100%] max-w-[1200px] m-auto">
-          <div className="flex justify-between w-[100%] h-full m-auto">
+          <div className="flex justify-between items-center w-[100%] h-full m-auto">
  
-            <div className="w-[50%] grid place-items-center">
+            <div className="w-[50%] hidden md:block place-items-center">
                 <img src="SignUpImg.png" alt="signup" />
             </div>
 
             <div
-              className={`w-[50%] flex flex-col p-10 m-auto`}
+              className={`w-[100%] md:w-[50%] flex flex-col p-10 m-auto`}
             >
               <form
                 onSubmit={handleSubmit}

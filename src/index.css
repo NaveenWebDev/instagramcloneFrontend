@@ -16,3 +16,6 @@
 .profileimg:hover div{
     width: 100%;
 }
+.imgHidden{
+    display: none !important;
+}

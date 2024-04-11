@@ -38,7 +38,7 @@ function App() {
       <ToastContainer/>
       <div className="flex justify-between overflow-x-hidden">
         {token?
-          <header className={`w-[23%] h-screen fixed top-0 left-0`}>
+          <header className={`w-[23%] h-screen fixed top-0 left-0 ${!token? "hidden":null} `}>
             <Navbar></Navbar>
           </header> : null
         }
@@ -46,7 +46,7 @@ function App() {
           className={` ${
             locate.pathname === "/profile" || locate.pathname === "/profile/"
               ? "w-[100%] left-[10%]"
-              : "w-[50%] left-[23%]"
+              : "w-[80%] md:w-[50%] left-[10%] md:left-[23%]"
           } relative  `}
         >
           <Routes>
@@ -58,9 +58,9 @@ function App() {
         </div>
         {token ?(
           <div
-            className={`w-[27%] h-screen sticky right-0 top-0 ${
+            className={`w-[27%] hidden md:block h-screen sticky right-0 top-0 ${
               locate.pathname === "/profile" || locate.pathname === "/profile/"
-                ? "hidden"
+                ? "imgHidden"
                 : null
             } `}
           >
