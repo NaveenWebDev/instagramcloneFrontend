@@ -1,17 +1,79 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import profileImg from "../assets/profile.jpg";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
+import {GlobalUserData} from "../App"
+import axios from "axios";
 
 const Profile = () => {
+
+  const apiUrl = process.env.REACT_APP_MAIN_URL;
+  const userDatas = useContext(GlobalUserData);
+  const [updateImgUrl, setUpdateImgUrl] = useState("")
+  
+  // ==================update profile data api ===================
+
+  const updateProfile = async (e)=>{
+    console.log(e.target.files[0])
+    const profilePayload ={
+      userId:userDatas.userobject.id,
+      imageFile:e.target.files[0]
+    }
+
+    try{
+      await axios.post(`${apiUrl}/imageupload`, profilePayload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then((res)=>{
+          console.log("image uploaded successfully")
+          getupdatedProfile()
+        })
+        .catch((err)=>{
+          console.log(err.message)
+        })
+    }catch(err){
+      console.log(err.message);
+    }
+
+
+  }
+
+  // ================== getupdated profile data api ===================
+
+  const getupdatedProfile = async ()=>{
+    try{
+      await axios.get(`${apiUrl}/updateProfileData`)
+        .then((res)=>{
+          const newimgUrl = res?.data?.data
+          const finalUrl = newimgUrl[newimgUrl.length-1]?.imageUrl
+          return finalUrl
+        })
+        .then((dataUrl)=>{
+          console.log(dataUrl)
+          setUpdateImgUrl(dataUrl)
+          console.log(updateImgUrl)
+        })
+    }catch(err){
+      console.log(err.message)
+    }
+  }
+
+  useEffect(()=>{
+    getupdatedProfile()
+  },[updateImgUrl])
+
+
   return (
     <>
       <div className="max-w-[900px] w-[90%] m-auto pb-10">
         <div className="flex flex-col md:flex-row items-center">
-          <div className="h-[200px] rounded-full w-[200px]">
+          <div className="h-[200px] rounded-full w-[200px] cursor-pointer hover:shadow-md relative">
+            <input type="file" name="file" id="file" className="h-[200px] rounded-full w-[200px] opacity-0 cursor-pointer absolute border border-red-700" onChange={(e)=>updateProfile(e)} />
             <img
-              src={profileImg}
+              src={ updateImgUrl? updateImgUrl : profileImg}
               alt="profileImg"
               className="object-cover object-center rounded-full h-[200px] w-[200px]"
             />

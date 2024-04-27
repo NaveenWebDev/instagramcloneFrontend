@@ -14,11 +14,11 @@ const GlobalUserData = createContext();
 
 function App() {
   
-  let storedToken = localStorage.getItem("token")
-  let userDatas = localStorage.getItem("userData")
+  let storedToken = localStorage.getItem("token");
+  let userDatas = localStorage.getItem("userData");
   const [token, setToken ] = useState(storedToken);
   const [userData, setUserData] = useState(userDatas);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const locate = useLocation();
 
   const checkLoginOrNot = ()=>{

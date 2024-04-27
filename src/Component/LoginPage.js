@@ -25,7 +25,7 @@ const LoginPage = () => {
     },
     validationSchema:signInSchema,
     onSubmit: async (value, action) => {
-      const result = await axios.post(apiUrl+"/api/v1/login", value)
+      const result = await axios.post(apiUrl+"/login", value)
       .then((val)=>{
         toast.success("Login Successfully")
         localStorage.setItem("token", JSON.stringify(val?.data?.userData?.token))

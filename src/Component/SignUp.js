@@ -33,7 +33,7 @@ const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     onSubmit: async(value, action) => {
       try{
 
-        const data = await axios.post(`${apiUrl}/api/v1/signup`, value) 
+        const data = await axios.post(`${apiUrl}/signup`, value) 
         .then(res=>{
           toast.success("SignUp Successfully")
           action.resetForm();
