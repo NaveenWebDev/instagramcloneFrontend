@@ -16,8 +16,10 @@ function App() {
   
   let storedToken = localStorage.getItem("token");
   let userDatas = localStorage.getItem("userData");
+  console.log(userDatas)
   const [token, setToken ] = useState(storedToken);
   const [userData, setUserData] = useState(userDatas);
+  console.log(userData)
   const navigate = useNavigate();
   const locate = useLocation();
 
@@ -28,11 +30,16 @@ function App() {
       navigate("/login")
     }
   }
+  useEffect(()=>{
+    setUserData(userDatas)
+  },[userDatas])
   
   useEffect(()=>{
     checkLoginOrNot()
   },[token])
+
   const userobject = JSON.parse(userData)
+
   return (
     <GlobalUserData.Provider value={{token, setToken , userobject }}>
       <ToastContainer/>

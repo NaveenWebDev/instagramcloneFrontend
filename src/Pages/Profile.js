@@ -5,23 +5,34 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import {GlobalUserData} from "../App"
 import axios from "axios";
+import {Puff} from "react-loader-spinner";
 
 const Profile = () => {
 
   const apiUrl = process.env.REACT_APP_MAIN_URL;
   const userDatas = useContext(GlobalUserData);
   const [updateImgUrl, setUpdateImgUrl] = useState("")
+  const [loader, setLoader] = useState(false)
+  const [userProfileId, setUserProfileId] = useState(null)
+  
+  
+  console.log(userDatas.userobject)
+  useEffect(()=>{
+    setUserProfileId(userDatas.userobject.id);
+  },[])
+  console.log(userProfileId)
   
   // ==================update profile data api ===================
 
   const updateProfile = async (e)=>{
     console.log(e.target.files[0])
     const profilePayload ={
-      userId:userDatas.userobject.id,
+      userId:userProfileId,
       imageFile:e.target.files[0]
     }
 
     try{
+      setLoader(true)
       await axios.post(`${apiUrl}/imageupload`, profilePayload, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -30,6 +41,7 @@ const Profile = () => {
         .then((res)=>{
           console.log("image uploaded successfully")
           getupdatedProfile()
+          setLoader(false)
         })
         .catch((err)=>{
           console.log(err.message)
@@ -44,18 +56,26 @@ const Profile = () => {
   // ================== getupdated profile data api ===================
 
   const getupdatedProfile = async ()=>{
+    const profilePayload = {
+      userId:userProfileId,
+    }
     try{
-      await axios.get(`${apiUrl}/updateProfileData`)
-        .then((res)=>{
-          const newimgUrl = res?.data?.data
+      setLoader(true)
+      await axios.post(`${apiUrl}/updateProfileData` , profilePayload)
+      .then((res)=>{
+        const newimgUrl = res?.data?.data
+        // console.log(res?.data?.data[newimgUrl.length-1]?.userId)
           const finalUrl = newimgUrl[newimgUrl.length-1]?.imageUrl
           return finalUrl
         })
         .then((dataUrl)=>{
-          console.log(dataUrl)
+          // console.log(dataUrl)
           setUpdateImgUrl(dataUrl)
-          console.log(updateImgUrl)
+          // console.log(updateImgUrl)
+          setLoader(false)
         })
+
+
     }catch(err){
       console.log(err.message)
     }
@@ -72,11 +92,21 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row items-center">
           <div className="h-[200px] rounded-full w-[200px] cursor-pointer hover:shadow-md relative">
             <input type="file" name="file" id="file" className="h-[200px] rounded-full w-[200px] opacity-0 cursor-pointer absolute border border-red-700" onChange={(e)=>updateProfile(e)} />
-            <img
+            {
+              loader?(
+                <Puff 
+              height="200"
+              width="200"
+              color="silver"
+            />
+              ):(
+                <img
               src={ updateImgUrl? updateImgUrl : profileImg}
               alt="profileImg"
               className="object-cover object-center rounded-full h-[200px] w-[200px]"
             />
+              )
+            }
           </div>
           <div className="p-10 w-[70%]">
             <div className="flex items-center gap-5">

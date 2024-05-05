@@ -28,6 +28,7 @@ const LoginPage = () => {
       const result = await axios.post(apiUrl+"/login", value)
       .then((val)=>{
         toast.success("Login Successfully")
+        localStorage.setItem("userData", JSON.stringify(val?.data?.userData?.user))
         localStorage.setItem("token", JSON.stringify(val?.data?.userData?.token))
         action.resetForm();
         navigate("/");
