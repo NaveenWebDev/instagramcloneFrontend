@@ -75,7 +75,7 @@ const Navbar = () => {
       <ToastContainer></ToastContainer>
       <nav className="border border-r-gray-300 h-screen px-7 ">
         <ul className="flex flex-col justify-between h-full pb-5">
-          <img src="/logo.png" alt="logo" width="60%" className="pb-5 pt-10" />
+          <img src="/logo.png" alt="logo" width="90%" className="pb-5 pt-10" />
           <li>
             <NavLink to="/">
               {" "}

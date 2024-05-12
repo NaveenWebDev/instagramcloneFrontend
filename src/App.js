@@ -9,6 +9,7 @@ import SignUp from "./Component/SignUp";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { createContext  } from "react";
+import Chats from "./Pages/Chats";
 
 const GlobalUserData = createContext();
 
@@ -16,10 +17,10 @@ function App() {
   
   let storedToken = localStorage.getItem("token");
   let userDatas = localStorage.getItem("userData");
-  console.log(userDatas)
+  // console.log(userDatas)
   const [token, setToken ] = useState(storedToken);
   const [userData, setUserData] = useState(userDatas);
-  console.log(userData)
+  // console.log(userData)
   const navigate = useNavigate();
   const locate = useLocation();
 
@@ -51,7 +52,7 @@ function App() {
         }
         <div
           className={` ${
-            locate.pathname === "/profile" || locate.pathname === "/profile/"
+            locate.pathname === "/profile" || locate.pathname === "/profile/" || locate.pathname === "/messages"
               ? "w-[100%] left-[10%]"
               : "w-[80%] md:w-[50%] left-[10%] md:left-[23%]"
           } relative  `}
@@ -61,12 +62,13 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/messages" element={<Chats />} />
           </Routes>
         </div>
         {token ?(
           <div
             className={`w-[27%] hidden md:block h-screen sticky right-0 top-0 ${
-              locate.pathname === "/profile" || locate.pathname === "/profile/"
+              locate.pathname === "/profile" || locate.pathname === "/profile/" || locate.pathname === "/messages"
                 ? "imgHidden"
                 : null
             } `}
