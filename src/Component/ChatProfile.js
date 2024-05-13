@@ -1,7 +1,7 @@
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
 
-const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData} ) => {
+const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData, recentMessage} ) => {
   return (
     <>
         <div 
@@ -14,7 +14,7 @@ const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData} ) => {
                 </div>
                 <div className='w-[80] px-3'>
                     <p className='font-medium'>{userName}</p>
-                    <p className='text-gray-400'>recent message aya</p>
+                    <p className='text-gray-400'>{recentMessage}</p>
                 </div>
             </div>
         </div>
