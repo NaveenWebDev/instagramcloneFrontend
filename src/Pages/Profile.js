@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import profileImg from "../assets/profile.jpg";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -16,11 +15,11 @@ const Profile = () => {
   const [userProfileId, setUserProfileId] = useState(null)
   
   
-  console.log(userDatas.userobject)
+  // console.log(userDatas.userobject)
   useEffect(()=>{
     setUserProfileId(userDatas.userobject.id);
   },[])
-  console.log(userProfileId)
+  // console.log(userProfileId)
   
   // ==================update profile data api ===================
 
@@ -56,26 +55,16 @@ const Profile = () => {
   // ================== getupdated profile data api ===================
 
   const getupdatedProfile = async ()=>{
-    const profilePayload = {
-      userId:userProfileId,
-    }
     try{
       setLoader(true)
-      await axios.post(`${apiUrl}/updateProfileData` , profilePayload)
+      await axios(`${apiUrl}/getProfileData/${userProfileId}`)
       .then((res)=>{
-        const newimgUrl = res?.data?.data
-        // console.log(res?.data?.data[newimgUrl.length-1]?.userId)
-          const finalUrl = newimgUrl[newimgUrl.length-1]?.imageUrl
-          return finalUrl
-        })
-        .then((dataUrl)=>{
-          // console.log(dataUrl)
-          setUpdateImgUrl(dataUrl)
-          // console.log(updateImgUrl)
-          setLoader(false)
-        })
-
-
+        setUpdateImgUrl(res?.data?.result?.imageUrl)
+      })
+      .catch((err)=>{
+        console.log(err.message)
+      })
+      setLoader(false)
     }catch(err){
       console.log(err.message)
     }
@@ -101,7 +90,7 @@ const Profile = () => {
             />
               ):(
                 <img
-              src={ updateImgUrl? updateImgUrl : profileImg}
+              src={ updateImgUrl}
               alt="profileImg"
               className="object-cover object-center rounded-full h-[200px] w-[200px]"
             />
@@ -154,7 +143,7 @@ const Profile = () => {
           <div className="flex flex-wrap justify-center gap-1">
             <div className="w-[295px] h-[295px] relative profileimg">
               <img
-                src={profileImg}
+                src={updateImgUrl}
                 alt="myPosts"
                 className="w-full h-full object-cover object-center"
               />
@@ -165,71 +154,8 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className="w-[295px] h-[295px] relative profileimg">
-              <img
-                src={profileImg}
-                alt="myPosts"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
-                <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
-                </div>
-              </div>
-            </div>
-            <div className="w-[295px] h-[295px] relative profileimg">
-              <img
-                src={profileImg}
-                alt="myPosts"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
-                <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
-                </div>
-              </div>
-            </div>
-            <div className="w-[295px] h-[295px] relative profileimg">
-              <img
-                src={profileImg}
-                alt="myPosts"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
-                <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
-                </div>
-              </div>
-            </div>
-            <div className="w-[295px] h-[295px] relative profileimg">
-              <img
-                src={profileImg}
-                alt="myPosts"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
-                <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
-                </div>
-              </div>
-            </div>
-            <div className="w-[295px] h-[295px] relative profileimg">
-              <img
-                src={profileImg}
-                alt="myPosts"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
-                <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
-                </div>
-              </div>
-            </div>
+
+
           </div>
         </div>
       </div>

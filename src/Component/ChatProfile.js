@@ -1,18 +1,20 @@
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
 
-const ChatProfile = () => {
+const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData} ) => {
   return (
     <>
-        <div className=' hover:bg-slate-200 cursor-pointer
-        '>
+        <div 
+        className=' hover:bg-slate-200 cursor-pointer'
+        onClick={()=>setCurrentChatUserData(id)}
+        >
             <div className='p-3 flex items-center'>
                 <div className='w-[20]'>
-                <Avatar alt="Remy Sharp" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkDuqW-0f9N9UQsl5qGY0N54C1Qtj3Mtne5w&usqp=CAU" />
+                <Avatar alt="Remy Sharp" src={imageUrl} />
                 </div>
                 <div className='w-[80] px-3'>
-                    <p className='font-medium'>username</p>
-                    <p>recent message aya hua hai</p>
+                    <p className='font-medium'>{userName}</p>
+                    <p className='text-gray-400'>recent message aya</p>
                 </div>
             </div>
         </div>
