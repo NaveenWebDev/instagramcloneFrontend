@@ -15,13 +15,24 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { ToastContainer, toast } from "react-toastify";
+import TextField from '@mui/material/TextField';
+import SendIcon from '@mui/icons-material/Send';
+import Button from '@mui/material/Button';
+import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Navbar = () => {
   const [isHidden, setIsHidden] = useState(false);
-
-  const navigate = useNavigate();
-
+  const apiUrl = process.env.REACT_APP_MAIN_URL;
   const userDatas = useContext(GlobalUserData);
+  const navigate = useNavigate();
+  const [description, setDescription] = useState("")
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageName, setImageName] = useState();
+  const [imageType, setImageType] = useState();
+  const [postImg, setPostImage] = useState();
+  const [loader, setLoader] = useState(false);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -37,7 +48,7 @@ const Navbar = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "60%",
+    width: "40%",
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 3,
@@ -49,17 +60,16 @@ const Navbar = () => {
     setOpen(false);
     setImageName("");
     setUploadedFileName("");
+    setDescription("")
   };
 
   // ==============image previw in upload===========
-  const [uploadedFileName, setUploadedFileName] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageName, setImageName] = useState();
-  const [imageType, setImageType] = useState();
 
-  const upload = (e) => {
+
+  const upload = async (e) => {
     setUploadedFileName(e.target.files[0].name);
     const file = e.target.files[0];
+    setPostImage(file)
     setImageName(file.name);
     setImageType(file.name.split(".")[1]);
 
@@ -69,6 +79,31 @@ const Navbar = () => {
       setImagePreview(objectURL);
     }
   };
+
+  const uploadFile = async ()=>{
+    const postPayload = {
+      userId:userDatas.userobject.id,
+      imageFile:postImg,
+      description
+    }
+
+    try{
+      setLoader(true)
+      await axios.post(`${apiUrl}/post`,
+        postPayload, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((res)=>{
+          toast.success("post upload successfully")
+          handleClose()
+          setLoader(false)
+        })
+    }catch(err){
+      console.log(err.message)
+    }
+  }
 
   return (
     <>
@@ -203,25 +238,33 @@ const Navbar = () => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div className="text-center">Create New Post</div>
+            <div className="text-center font-semibold">Create New Post</div>
           </Typography>
+        <TextField
+          id="outlined-textarea"
+          label="Description"
+          placeholder="enter your description"
+          sx={{width:"100%"}}
+          onChange={(e)=>setDescription(e.target.value)}
+          multiline
+        />
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <form className="border-4 border-gray-500 border-dashed rounded-md bg-slate-300 h-[200px] mb-5 relative">
+            <form className="border-4 border-gray-500 border-dashed rounded-md bg-slate-300 h-[200px] mb-5 relative overflow-auto">
               <input
                 type="file"
                 name="file"
                 id="file"
-                className="w-full h-full opacity-0"
+                className="w-full h-full opacity-0 overflow-auto"
                 onChange={(e) => {
                   upload(e);
                 }}
               />
-              <p className="absolute top-[50%] left-[50%] translate-x-[-50%] trnaslate-y-[-50%]">
+              <p className="absolute top-[50%] left-[50%] translate-x-[-50%] trnaslate-y-[-50%] ">
                 {imageName ? imageName : "Select And Drag A Image"}
               </p>
             </form>
 
-            {uploadedFileName ? (
+            {uploadedFileName && (
               <img
                 src={imagePreview}
                 alt="uploadedImg"
@@ -230,8 +273,18 @@ const Navbar = () => {
                 style={{ objectFit: "cover", objectPosition: "center" }}
                 className="rounded-md block m-auto "
               />
-            ) : null}
+            )}
           </Typography>
+          <div className="flex justify-end" >
+          <Button variant="contained" endIcon={<SendIcon />} onClick={()=>uploadFile()}>
+          {
+            loader? 
+        <CircularProgress sx={{color:"white",margin:"0 0.5rem", height:"5px",}}/>
+            :
+            "Send" 
+          }
+      </Button>
+          </div>
         </Box>
       </Modal>
     </>

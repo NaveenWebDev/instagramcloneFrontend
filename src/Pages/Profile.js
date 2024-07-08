@@ -24,7 +24,8 @@ const Profile = () => {
   // ==================update profile data api ===================
 
   const updateProfile = async (e)=>{
-    console.log(e.target.files[0])
+    // console.log(e.target.files[0])
+
     const profilePayload ={
       userId:userProfileId,
       imageFile:e.target.files[0]

@@ -8,7 +8,7 @@ const RightSiderBar = () => {
 let year = date.getFullYear();
   return (
     <>
-        <div className='p-5'>
+        <div className='p-5 -z-20'>
             <ShowProfile profileImg={profileImg} userName="naveensharma8266" name="Naveen Sharma" button="Switch" />
 
           {/* ================================suggested people ========================== */}

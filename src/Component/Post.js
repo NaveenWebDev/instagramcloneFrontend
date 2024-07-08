@@ -13,11 +13,9 @@ const Post = () => {
 
     const [showMore, setShowMore] = useState(false)
 
-
-
   return (
     <>
-        <div className='w-[70%] m-auto flex flex-col my-[2rem]'>
+        <div className='w-[70%] m-auto flex flex-col my-[2rem] shadow-2xl p-3'>
             <div className='h-[20%]'>
               <ShowProfile profileImg={profileImg}  userName="naveensharma8266" name="Naveen" button={<button  className='text-4xl pb-6'>...</button>} />
             </div>

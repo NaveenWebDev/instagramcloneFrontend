@@ -43,8 +43,10 @@ function App() {
 
   return (
     <GlobalUserData.Provider value={{token, setToken , userobject }}>
-      <ToastContainer/>
-      <div className="flex justify-between overflow-x-hidden">
+      <div className="z-50">
+      <ToastContainer />
+      </div>
+      <div className="flex justify-between overflow-x-hidden -z-30">
         {token?
           <header className={`w-[23%] h-screen fixed top-0 left-0 ${!token? "hidden":null} `}>
             <Navbar></Navbar>
