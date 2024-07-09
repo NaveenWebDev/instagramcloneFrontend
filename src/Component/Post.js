@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import profileImg from "../assets/profile.jpg"
+// import profileImg from "../assets/profile.jpg"
 import ShowProfile from '../Component/ShowProfile'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -9,7 +9,7 @@ import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 
-const Post = ({postImg, desc, userName, createdAt}) => {
+const Post = ({postImg, profileImg, desc, userName, createdAt}) => {
 
     const [showMore, setShowMore] = useState(false)
 
@@ -27,19 +27,19 @@ const Post = ({postImg, desc, userName, createdAt}) => {
 
           <div className='flex justify-between mt-3'>
             <div>
-            <span className='me-3'> 
+            <span className='me-3 cursor-pointer'> 
                 <FavoriteBorderOutlinedIcon sx={{fontSize:"30px"}}/>
             </span>
-            <span className='me-3'> 
+            <span className='me-3 cursor-pointer'> 
                 <ModeCommentOutlinedIcon sx={{fontSize:"30px"}}/>
             </span>
-            <span > 
+            <span className='cursor-pointer'> 
                 <SendOutlinedIcon sx={{fontSize:"30px"}}/>
             </span>
             </div>
 
             <div>
-                <BookmarkBorderOutlinedIcon sx={{fontSize:"30px"}}/>
+                <BookmarkBorderOutlinedIcon sx={{fontSize:"30px", cursor:"pointer"}}/>
             </div>
           </div>
 

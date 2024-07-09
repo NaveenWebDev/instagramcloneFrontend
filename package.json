@@ -13,6 +13,7 @@
     "axios": "^1.6.7",
     "dotenv": "^16.4.5",
     "formik": "^2.4.5",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^6.1.6",
