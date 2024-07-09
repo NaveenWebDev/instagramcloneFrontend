@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ShowProfile = ({profileImg, userName, name, button}) => {
+const ShowProfile = ({profileImg, userName, name_time, button,}) => {
   return (
     <>
         <div className="profile flex justify-between items-center">
@@ -10,7 +10,7 @@ const ShowProfile = ({profileImg, userName, name, button}) => {
                     </div>    
                     <div className='mx-2'>
                       <p className='font-semibold text-sm'>{userName}</p>
-                      <p className='text-gray-500 text-base'>{name}</p>
+                      <p className='text-gray-500 text-base'>{name_time}</p>
                     </div>
                 </div>
                 <p className='text-blue-500 text-sm cursor-pointer'>{button}</p>            

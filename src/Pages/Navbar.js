@@ -49,9 +49,11 @@ const Navbar = () => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "40%",
+    height:"100%",
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 3,
+    overflow:"auto"
   };
 
   const [open, setOpen] = React.useState(false);
@@ -83,6 +85,7 @@ const Navbar = () => {
   const uploadFile = async ()=>{
     const postPayload = {
       userId:userDatas.userobject.id,
+      userName:userDatas.userobject.userName,
       imageFile:postImg,
       description
     }
