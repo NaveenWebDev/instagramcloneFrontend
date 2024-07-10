@@ -13,13 +13,26 @@ const Profile = () => {
   const [updateImgUrl, setUpdateImgUrl] = useState("")
   const [loader, setLoader] = useState(false)
   const [userProfileId, setUserProfileId] = useState(null)
-  
+  const [userPosts, setUserPosts] = useState([])
   
   // console.log(userDatas.userobject)
   useEffect(()=>{
     setUserProfileId(userDatas.userobject.id);
   },[])
-  // console.log(userProfileId)
+  
+  const getPostsByPostId = async ()=>{
+      await axios(`${apiUrl}/getPostsByPostId/userId=${userProfileId}`)
+        .then((res)=>{
+          setUserPosts(res?.data?.result)
+        })
+        .catch((err)=>{
+          console.log(err.message)
+        })
+  }
+  
+  useEffect(() => {
+    getPostsByPostId()
+  }, [userProfileId])
   
   // ==================update profile data api ===================
 
@@ -142,9 +155,12 @@ const Profile = () => {
           </div>
 
           <div className="flex flex-wrap justify-center gap-1">
-            <div className="w-[295px] h-[295px] relative profileimg">
+
+            {
+              userPosts?.map((val, ind)=>(
+                <div key={ind} className="w-[295px] h-[295px] relative profileimg">
               <img
-                src={updateImgUrl}
+                src={val.imageUrl}
                 alt="myPosts"
                 className="w-full h-full object-cover object-center"
               />
@@ -155,6 +171,10 @@ const Profile = () => {
                 </div>
               </div>
             </div>
+              ))
+            }
+
+            
 
 
           </div>
