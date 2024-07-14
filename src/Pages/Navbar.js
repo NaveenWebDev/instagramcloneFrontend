@@ -88,11 +88,11 @@ const Navbar = () => {
 
   const uploadFile = async ()=>{
     const postPayload = {
-      userId:userDatas.userobject.id,
-      userName:userDatas.userobject.userName,
+      userId:userDatas?.userobject?.id,
+      userName:userDatas?.userobject?.userName,
       imageFile:postImg,
       description,
-      profileImg:userDatas.userobject.imageUrl
+      profileImg:userDatas?.userobject?.imageUrl
     }
 
     try{
