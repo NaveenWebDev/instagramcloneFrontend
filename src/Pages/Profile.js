@@ -26,7 +26,7 @@ const Profile = () => {
           setUserPosts(res?.data?.result)
         })
         .catch((err)=>{
-          console.log(err.message)
+          console.log(err?.message)
         })
   }
   

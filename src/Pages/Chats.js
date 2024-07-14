@@ -4,38 +4,48 @@ import MessageIcon from "@mui/icons-material/Message";
 import axios from "axios";
 import { GlobalUserData } from "../App";
 import { toast } from "react-toastify";
-
+import {io} from "socket.io-client";
+ 
 const Chats = () => {
   const apiUrl = process.env.REACT_APP_MAIN_URL;
   const { userobject } = useContext(GlobalUserData);
 
   const [chatUserData, setChatUserData] = useState([]);
-  const [currentChatUserId, setCurrentChatUserData] = useState();
+  const [currentChatUserId, setCurrentChatUserData] = useState(null);
   const [UserDataForChatById, setUserDataForChatById] = useState([]);
   const [receiverId, setReceiverId] = useState();
-  const [chat, setChat] = useState();
+  const [chat, setChat] = useState("");
   const [chatData, setChatData] = useState();
+  const [socketData, setSocketData] = useState("")
 
+  const socket = io('http://localhost:4000');
+
+  // jinke saat chat hoga ye wo api hai 
   const getChatUser = async () => {
     axios
       .get(`${apiUrl}/getUserDataForChat`)
       .then((res) => {
-        setChatUserData(res?.data?.result?.userDta);
+        setChatUserData(res?.data?.result?.userDta || []);
       })
       .catch((err) => {
         console.log(err.message);
+        console.log("getChatUser me erro hai")
       });
   };
-  const getChatUserById = async () => {
-    axios
-      .get(`${apiUrl}/getUserDataForChatById/${currentChatUserId}`)
-      .then((res) => {
-        setUserDataForChatById(res?.data?.result);
+  console.log(currentChatUserId)
+  const getChatUserById = async (userId) => {
+    if(!userId) return;
+    try {
+      console.log("user id id is = ", userId)
+      const res = await axios.get(`${apiUrl}/getUserDataForChatById/${userId}`);
+      setUserDataForChatById(res?.data?.result || []);
+      if (res.data.result.length > 0) {
         setReceiverId(res.data.result[0].id);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+      }
+    } catch (err) {
+      console.log(err.message);
+      console.log("getChatUserById me error hai");
+    }
   };
 
   // =========================send chat ========================
@@ -51,11 +61,13 @@ const Chats = () => {
         const sendChats = await axios
           .post(`${apiUrl}/createChat`, payload)
           .then((res) => {
+            socket.emit("message", chat)
             setChat("");
             receiveChat();
           })
           .catch((err) => {
             console.log(err.message);
+            console.log("send chat me erro hai")
             toast.error("all fields are required");
           });
       }
@@ -69,28 +81,43 @@ const Chats = () => {
       `${apiUrl}/chat/userId/${userobject.id}/receiverId/${receiverId}`
     )
       .then((res) => {
-        setChatData(res.data.result);
+        setChatData(res?.data.result);
       })
       .catch((err) => {
         console.log(err.message);
+        console.log("receive chat me error hai")
       });
   };
 
-  console.log(chatData);
-
   useEffect(() => {
-    getChatUserById();
-    setTimeout(() => {
+    getChatUserById(currentChatUserId);
+    // setTimeout(() => {
         // updateHeight();
         receiveChat();
-      }, 100);
+      // }, 100);
 
   }, [currentChatUserId, receiverId]);
-  // console.log(receiverId)
 
   useEffect(() => {
     getChatUser();
   }, []);
+
+  useEffect(() => {
+    socket.on("message",(data) => {
+      // console.log(data);
+      // await getChatUserById(currentChatUserId);
+      // await getChatUser();
+      setSocketData(data)
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+      receiveChat();
+  }, [socketData])
+  
 
   return (
     <>
@@ -102,6 +129,7 @@ const Chats = () => {
               naveenSharma8266
             </p>
             {chatUserData.map((user, ind) => (
+              user?.id === userobject.id? null :
               <ChatProfile
                 id={user?.id}
                 imageUrl={user?.imageUrl}
