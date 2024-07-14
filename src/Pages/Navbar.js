@@ -41,6 +41,10 @@ const Navbar = () => {
     userDatas.setToken("");
   };
 
+  // if (!userDatas) {
+  //   return null; // or some loading state
+  // }
+
   // =============================modal code==========================
 
   const style = {
@@ -201,7 +205,7 @@ const Navbar = () => {
               <div className="flex items-center cursor-pointer">
                 <Link to="/profile" className="flex items-center">
                 <Avatar
-                  src={userDatas.userobject.imageUrl}
+                  src={userDatas?.userobject?.imageUrl}
                   sx={{ width: 33, height: 33, marginRight: "0.5rem" }}
                 />
                   <span className="hidden md:block">Profile</span>
