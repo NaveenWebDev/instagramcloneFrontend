@@ -47,10 +47,19 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
             }
         })
     }
+    const deletePostLike = async()=>{
+
+      await axios.delete(`${apiUrl}/deletePostLike/${postId}/userId/${userobject?.id}`)
+        .then((res)=>{
+            if(res?.data?.result){
+              setLike(false)
+            }
+        })
+    }
 
     useEffect(()=>{
       getLikeCount()
-    },[])
+    },[likeCount, like])
 
 
   return (
@@ -69,7 +78,11 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
             <div>
             <span className='me-3'> 
               {
-                like?<FavoriteIcon  sx={{fontSize:"30px", color:"red"}}  /> : <FavoriteBorderOutlinedIcon className="cursor-pointer" sx={{fontSize:"30px"}} onClick={()=>addLike()} />
+                like?
+                <FavoriteIcon onClick={deletePostLike} className="cursor-pointer" sx={{fontSize:"30px", color:"red"}}  /> 
+                : 
+                <FavoriteBorderOutlinedIcon className="cursor-pointer" sx={{fontSize:"30px"}} onClick={()=>addLike()} />
+
               }
                 
             </span>
