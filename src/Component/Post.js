@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-// import profileImg from "../assets/profile.jpg"
+import React, { useContext, useEffect, useState } from 'react'
 import ShowProfile from '../Component/ShowProfile'
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -8,10 +7,51 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import { Button, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import axios from 'axios'
+import {GlobalUserData} from "../App"
 
-const Post = ({postImg, profileImg, desc, userName, createdAt}) => {
+const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
 
     const [showMore, setShowMore] = useState(false)
+    const [like, setLike] = useState(false)
+    const [likeCount, setLikeCount] = useState()
+    const {userobject} = useContext(GlobalUserData);
+
+    const apiUrl = process.env.REACT_APP_MAIN_URL;
+
+    const addLike = async ()=>{
+      const payload = {
+        postId,
+        userId:userobject?.id,
+        userName:userobject?.userName
+      }
+      await axios.post(`${apiUrl}/postLikes`, payload)
+        .then((res)=>{
+          getLikeCount()
+          
+        })
+        .catch((err)=>{
+          console.log(err.message)
+        })
+
+    }
+
+    const getLikeCount = async()=>{
+
+      await axios.get(`${apiUrl}/getLikesCount/${postId}/userId/${userobject?.id}`)
+        .then((res)=>{
+          setLikeCount(res?.data?.result)
+            if(res?.data?.likedResult.length !== 0){
+              setLike(true)
+            }
+        })
+    }
+
+    useEffect(()=>{
+      getLikeCount()
+    },[])
+
 
   return (
     <>
@@ -27,8 +67,11 @@ const Post = ({postImg, profileImg, desc, userName, createdAt}) => {
 
           <div className='flex justify-between mt-3'>
             <div>
-            <span className='me-3 cursor-pointer'> 
-                <FavoriteBorderOutlinedIcon sx={{fontSize:"30px"}}/>
+            <span className='me-3'> 
+              {
+                like?<FavoriteIcon  sx={{fontSize:"30px", color:"red"}}  /> : <FavoriteBorderOutlinedIcon className="cursor-pointer" sx={{fontSize:"30px"}} onClick={()=>addLike()} />
+              }
+                
             </span>
             <span className='me-3 cursor-pointer'> 
                 <ModeCommentOutlinedIcon sx={{fontSize:"30px"}}/>
@@ -46,14 +89,14 @@ const Post = ({postImg, profileImg, desc, userName, createdAt}) => {
           {/* ============likes=============== */}
 
           <div className="likes font-semibold">
-            45681 likes
+            {likeCount} likes
           </div>
 
           {/* ============useName and Description============== */}
 
           <div>
             <div className={` ${showMore?null:'flex'} `}>
-            <span className={` ${showMore? null : 'text-ellipsis whitespace-nowrap'} overflow-hidden inline-block w-[100%]`}> <span className='font-semibold me-2'>NaveenSharma8266</span> {desc}</span>
+            <span className={` ${showMore? null : 'text-ellipsis whitespace-nowrap'} overflow-hidden inline-block w-[100%]`}> <span className='font-semibold me-2'>{userName}</span> {desc}</span>
            
             <span className='text-blue-500 cursor-pointer' onClick={()=>setShowMore(prev=>!showMore)} > {showMore? 'less' :'more'} </span>
             </div>

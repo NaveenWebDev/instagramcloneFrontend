@@ -17,7 +17,7 @@ const Profile = () => {
   
   // console.log(userDatas.userobject)
   useEffect(()=>{
-    setUserProfileId(userDatas.userobject.id);
+    setUserProfileId(userDatas?.userobject?.id);
   },[])
   
   const getPostsByPostId = async ()=>{

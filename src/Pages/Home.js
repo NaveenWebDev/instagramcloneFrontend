@@ -30,7 +30,7 @@ const Home = () => {
       {
         postData?.map((val, ind)=>(
         <div key={ind}>
-          <Post postImg={val?.imageUrl} profileImg={val?.profileImg} createdAt={val?.createdAt} userName={val?.userName} desc={val?.description} />
+          <Post postId={val?.id} userId={val?.userId} postImg={val?.imageUrl} profileImg={val?.profileImg} createdAt={val?.createdAt} userName={val?.userName} desc={val?.description} />
         </div>
         ))
       }
