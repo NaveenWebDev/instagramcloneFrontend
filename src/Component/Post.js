@@ -10,15 +10,35 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from 'axios'
 import {GlobalUserData} from "../App"
+import { toast } from 'react-toastify';
+import Picker from 'emoji-picker-react';
+import Dialog from '@mui/material/Dialog';
+import Slide from '@mui/material/Slide';
 
-const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const Post = ({setPostRender, postId, postImg, profileImg, desc, userName, createdAt, commentCount}) => {
 
     const [showMore, setShowMore] = useState(false)
     const [like, setLike] = useState(false)
     const [likeCount, setLikeCount] = useState()
+    const [comment, setComment] = useState("")
+    const [allComment, setAllComment] = useState([])
     const {userobject} = useContext(GlobalUserData);
-
+    const [showPicker, setShowPicker] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const apiUrl = process.env.REACT_APP_MAIN_URL;
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
 
     const addLike = async ()=>{
       const payload = {
@@ -61,6 +81,39 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
       getLikeCount()
     },[likeCount, like])
 
+    const onEmojiClick = (event, emojiObject) => {
+      setComment(prevComment => prevComment + emojiObject?.emoji);
+      console.log(emojiObject)
+      setShowPicker(false);
+    };
+
+    const addComment = async()=>{
+
+      const payload = {
+        postId,
+        userId:userobject?.id,
+        comment,
+        profileImg:userobject?.imageUrl,
+        userName:userobject?.userName
+      }
+
+      await axios.post(`${apiUrl}/addComment`, payload)
+        .then((res)=>{
+          toast.success("comment add successfully")
+          setPostRender(res)
+          setComment("")
+        })
+
+    }
+    const getComment = async(myPostId)=>{
+
+      await axios.get(`${apiUrl}/getComment/postId/${myPostId}`)
+        .then((res)=>{
+          setAllComment(res?.data?.result)
+        })
+
+    }
+
 
   return (
     <>
@@ -86,8 +139,8 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
               }
                 
             </span>
-            <span className='me-3 cursor-pointer'> 
-                <ModeCommentOutlinedIcon sx={{fontSize:"30px"}}/>
+            <span className='me-3'> 
+                <ModeCommentOutlinedIcon onClick={ ()=> {handleClickOpen(); getComment(postId)}} className="cursor-pointer" sx={{fontSize:"30px"}}/>
             </span>
             <span className='cursor-pointer'> 
                 <SendOutlinedIcon sx={{fontSize:"30px"}}/>
@@ -118,18 +171,19 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
           {/* ============================comments============== */}
 
           <div>
-            <div className='text-gray-400 text-[0.90rem] cursor-pointer '>View All Comments</div>
-            <div className='flex content-center'>
+            <div onClick={ ()=> {handleClickOpen(); getComment(postId)}} className='text-gray-400 text-[0.90rem] cursor-pointer '>View All {commentCount} Comments</div>
+            <div className='flex content-center relative'>
                 <div className='relative w-full'>
                     <div>
-                    <TextField id="standard-basic" label="Add A Comments" variant="standard" sx={{width:"100%"}} />
+                    <TextField id="standard-basic" value={comment} label="Add A Comments" variant="standard" sx={{width:"100%"}} onChange={(e)=>setComment(e.target.value)} />
                     </div>
                     <span className='mt-2 cursor-pointer absolute right-0 top-0 pe-1'>
-                        <EmojiEmotionsIcon sx={{color:"#666666"}}/>
+                        <EmojiEmotionsIcon  onClick={() => setShowPicker(!showPicker)} sx={{color:"#666666"}}/>
                     </span>
                 </div>
+                {showPicker && <Picker style={{position:"absolute", top:"-950%", right:"0%"}} onEmojiClick={onEmojiClick} />}
 
-                <Button variant="contained" endIcon={<SendIcon />}>
+                <Button onClick={addComment} variant="contained" endIcon={<SendIcon />}>
                     Send
                 </Button>
 
@@ -137,6 +191,36 @@ const Post = ({postId, postImg, profileImg, desc, userName, createdAt}) => {
           </div>
 
         </div>
+        <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        // keepMounted
+        // maxWidth=""
+        onClose={handleClose}
+        // aria-describedby="alert-dialog-slide-description"
+      >
+              <div className='flex gap-2 justify-between items-center'>
+                <div className='w-[50%] h-full border'>
+                  <img src={postImg} alt="postImage" />
+                </div>
+                <div className='w-[50%] max-h-[400px] overflow-auto flex flex-col gap-3'>
+
+                  <>
+                  {
+                    allComment.map((val, ind)=>(
+                      <div>
+                        
+                  <ShowProfile key={ind} profileImg={val?.profileImg} comment={val?.comment} name_time={val?.createdAt} userName={val?.userName}/>
+                      <hr />
+                      </div>
+                    ))
+                  }
+                  </>
+
+
+                </div>
+              </div>
+      </Dialog>
     </>
   )
 }
