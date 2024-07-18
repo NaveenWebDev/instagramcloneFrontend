@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import moment from "moment";
-import {addElipsis} from "add-ellipses";
 import Avatar from '@mui/material/Avatar';
 import { GlobalUserData } from "../App";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import axios from "axios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2"
 
 const ShowProfile = ({postId, profileImg, userName, name_time, button , comment, getPostData }) => {
   const { userobject } = useContext(GlobalUserData);
@@ -20,16 +19,32 @@ const ShowProfile = ({postId, profileImg, userName, name_time, button , comment,
     setAnchorEl(null);
   };
 
-  const deletePost = async ()=>(
-    await axios.delete(`${apiUrl}/deletePost/postId=${postId}`)
-      .then((res)=>{
-        getPostData();
-        toast.success("post deleted successfully")
-      })
-      .catch((err)=>{
-        console.log(err.message)
-      })
-  )
+  const deletePost = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${apiUrl}/deletePost/postId=${postId}`);
+          getPostData();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your post has been deleted.",
+            icon: "success"
+          });
+        } catch (err) {
+          console.error(err.message);
+        }
+      }
+    });
+  };
+  
     
   return (
     <>
@@ -47,7 +62,7 @@ const ShowProfile = ({postId, profileImg, userName, name_time, button , comment,
           <div className="mx-2">
             <p className="font-semibold text-sm">{userName}</p>
               {
-                comment && <p>{ addElipsis(comment) }</p>
+                comment && <p>{comment}</p>
               } 
                 
             <p className="text-gray-500 text-base">
@@ -66,7 +81,7 @@ const ShowProfile = ({postId, profileImg, userName, name_time, button , comment,
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={ ()=> {handleClose(); deletePost()}}>Delete</MenuItem>
+        <MenuItem onClick={ ()=> {deletePost(); handleClose() }}>Delete</MenuItem>
       </Menu>
       </div>
     </>

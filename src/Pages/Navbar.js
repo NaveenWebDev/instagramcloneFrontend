@@ -203,7 +203,7 @@ const Navbar = () => {
           <li>
             <span>
               <div className="flex items-center cursor-pointer">
-                <Link to="/profile" className="flex items-center">
+                <Link to={`/profile/${userDatas?.userobject?.id}`} className="flex items-center">
                 <Avatar
                   src={userDatas?.userobject?.imageUrl}
                   sx={{ width: 33, height: 33, marginRight: "0.5rem" }}

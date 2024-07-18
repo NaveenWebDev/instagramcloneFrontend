@@ -8,7 +8,6 @@ const Home = () => {
 
   const [postData, setPostData] = useState([])
   const [postRender, setPostRender] = useState()
-
   const getPostData = async ()=>{
     await axios.get(`${apiUrl}/getPost`)
       .then((res)=>{

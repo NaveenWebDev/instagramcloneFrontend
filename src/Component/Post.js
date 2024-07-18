@@ -14,12 +14,13 @@ import { toast } from 'react-toastify';
 import Picker from 'emoji-picker-react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
+import { useNavigate } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, userName, createdAt, commentCount}) => {
+const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, userName, createdAt, commentCount, userId}) => {
 
     const [showMore, setShowMore] = useState(false)
     const [like, setLike] = useState(false)
@@ -30,6 +31,7 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
     const [showPicker, setShowPicker] = useState(false);
     const [open, setOpen] = React.useState(false);
     const apiUrl = process.env.REACT_APP_MAIN_URL;
+    const navigate = useNavigate();
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -118,7 +120,7 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
   return (
     <>
         <div className='w-[70%] m-auto flex flex-col my-[2rem] shadow-2xl p-3'>
-            <div className='h-[20%]'>
+            <div className='h-[20%] cursor-pointer' onClick={()=>navigate(`/profile/${userId}`)}>
               <ShowProfile getPostData={getPostData} postId={postId} profileImg={profileImg}  userName={userName} name_time={createdAt} button={<button  className='text-4xl pb-6'>...</button>} />
             </div>
             {/* =====post image==== */}

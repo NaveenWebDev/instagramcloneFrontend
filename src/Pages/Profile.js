@@ -2,23 +2,29 @@ import React, {useContext, useEffect, useState} from "react";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
-import {GlobalUserData} from "../App"
 import axios from "axios";
 import {Puff} from "react-loader-spinner";
+import { useParams } from "react-router-dom";
+import { GlobalUserData } from "../App";
 
 const Profile = () => {
 
   const apiUrl = process.env.REACT_APP_MAIN_URL;
-  const userDatas = useContext(GlobalUserData);
   const [updateImgUrl, setUpdateImgUrl] = useState("")
   const [loader, setLoader] = useState(false)
   const [userProfileId, setUserProfileId] = useState(null)
   const [userPosts, setUserPosts] = useState([])
-  
-  // console.log(userDatas.userobject)
+  const [fullName, setFullName] = useState("")
+  const [userName, setUserName] = useState("")
+  const [bio, setBio] = useState("")
+  const {userId} = useParams()
+  const userDatas = useContext(GlobalUserData);
+  console.log(userDatas?.userobject?.id)
+  console.log(userId)
+
   useEffect(()=>{
-    setUserProfileId(userDatas?.userobject?.id);
-  },[])
+    setUserProfileId(userId);
+  },[userId])
   
   const getPostsByPostId = async ()=>{
       await axios(`${apiUrl}/getPostsByPostId/userId=${userProfileId}`)
@@ -32,7 +38,8 @@ const Profile = () => {
   
   useEffect(() => {
     getPostsByPostId()
-  }, [userProfileId])
+    getupdatedProfile()
+  }, [userProfileId, userId])
   
   // ==================update profile data api ===================
 
@@ -40,7 +47,7 @@ const Profile = () => {
     // console.log(e.target.files[0])
 
     const profilePayload ={
-      userId:userProfileId,
+      userId,
       imageFile:e.target.files[0]
     }
 
@@ -74,6 +81,9 @@ const Profile = () => {
       await axios(`${apiUrl}/getProfileData/${userProfileId}`)
       .then((res)=>{
         setUpdateImgUrl(res?.data?.result?.imageUrl)
+        setFullName(res?.data?.result?.fullName)
+        setUserName(res?.data?.result?.userName)
+        setBio(res?.data?.result?.bio)
       })
       .catch((err)=>{
         console.log(err.message)
@@ -86,7 +96,7 @@ const Profile = () => {
 
   useEffect(()=>{
     getupdatedProfile()
-  },[updateImgUrl])
+  },[updateImgUrl, userId])
 
 
   return (
@@ -113,10 +123,13 @@ const Profile = () => {
           </div>
           <div className="p-10 w-[70%]">
             <div className="flex items-center gap-5">
-              <p className="font-medium text-[1.2rem]">naveensharma8266</p>
+              <p className="font-medium text-[1.2rem]">{userName}</p>
+              {
+                userDatas?.userobject?.id == userId ? 
               <button className="bg-slate-300 rounded-md font-semibold px-3 py-2">
                 Edit Profile
-              </button>
+              </button> : null
+              }
             </div>
 
             <div className="mt-5">
@@ -135,10 +148,9 @@ const Profile = () => {
             </div>
 
             <div>
-              <p className="font-medium my-2">Naveen Sharma</p>
+              <p className="font-medium my-2">{fullName}</p>
               <p className="h-[100px] overflow-auto text-gray-400">
-                Description Lorem ipsum dolor sit amet consectetur adipisicing
-                elit.
+                {bio}
               </p>
             </div>
           </div>
@@ -166,8 +178,8 @@ const Profile = () => {
               />
               <div className="absolute left-0 top-0 bg-[#00000093] h-full w-0 overflow-hidden">
                 <div className="flex gap-2 justify-center">
-                  <span className="font-medium text-white"><FavoriteIcon /> 500M</span>
-                  <span className="font-medium text-white"><CommentIcon /> 10M</span>
+                  <span className="font-medium text-white"><FavoriteIcon /> {val?.likeCount}</span>
+                  <span className="font-medium text-white"><CommentIcon /> {val?.commentCount}</span>
                 </div>
               </div>
             </div>

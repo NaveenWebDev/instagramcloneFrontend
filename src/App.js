@@ -54,7 +54,7 @@ function App() {
         }
         <div
           className={` ${
-            locate.pathname === "/profile" || locate.pathname === "/profile/" || locate.pathname === "/messages"
+            locate.pathname === "/profile/:userId" || locate.pathname === "/profile/:userId" || locate.pathname === "/messages"
               ? "w-[100%] left-[10%]"
               : "w-[80%] md:w-[50%] left-[10%] md:left-[23%]"
           } relative  `}
@@ -63,7 +63,7 @@ function App() {
             <Route path="/" element={<Home></Home>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/messages" element={<Chats />} />
           </Routes>
         </div>
