@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from "axios";
 import Swal from "sweetalert2"
 
-const ShowProfile = ({postId, profileImg, userName, name_time, button , comment, getPostData }) => {
+const ShowProfile = ({postId, onClick, profileImg, userName, name_time, button , comment, getPostData }) => {
   const { userobject } = useContext(GlobalUserData);
   const apiUrl = process.env.REACT_APP_MAIN_URL;
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -50,7 +50,7 @@ const ShowProfile = ({postId, profileImg, userName, name_time, button , comment,
     <>
       <div className="profile flex justify-between items-center">
         <div className="flex items-center">
-          <div className=" border border-black rounded-full my-1">
+          <div className=" border border-black rounded-full my-1 cursor-pointer" onClick={onClick}>
             <Avatar
               src={profileImg}
               alt="profileImg"

@@ -83,7 +83,7 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
       getLikeCount()
     },[likeCount, like])
 
-    const onEmojiClick = (event, emojiObject) => {
+    const onEmojiClick = (emojiObject, event) => {
       setComment(prevComment => prevComment + emojiObject?.emoji);
       console.log(emojiObject)
       setShowPicker(false);
@@ -120,8 +120,8 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
   return (
     <>
         <div className='w-[70%] m-auto flex flex-col my-[2rem] shadow-2xl p-3'>
-            <div className='h-[20%] cursor-pointer' onClick={()=>navigate(`/profile/${userId}`)}>
-              <ShowProfile getPostData={getPostData} postId={postId} profileImg={profileImg}  userName={userName} name_time={createdAt} button={<button  className='text-4xl pb-6'>...</button>} />
+            <div className='h-[20%]' >
+              <ShowProfile getPostData={getPostData} onClick={()=>navigate(`/profile/${userId}`)} postId={postId} profileImg={profileImg}  userName={userName} name_time={createdAt} button={<button  className='text-4xl pb-6'>...</button>} />
             </div>
             {/* =====post image==== */}
           <div className='h-[90%]'>
