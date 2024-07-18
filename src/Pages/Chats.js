@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import ChatProfile from "../Component/ChatProfile";
 import MessageIcon from "@mui/icons-material/Message";
 import axios from "axios";
@@ -18,7 +18,7 @@ const Chats = () => {
   const [chatData, setChatData] = useState();
   const [socketData, setSocketData] = useState("")
 
-  const socket = io('http://localhost:4000');
+  const socket = useMemo(() => io('http://localhost:4000'), [])
 
   // jinke saat chat hoga ye wo api hai 
   const getChatUser = async () => {
@@ -32,7 +32,7 @@ const Chats = () => {
         console.log("getChatUser me erro hai")
       });
   };
-  console.log(currentChatUserId)
+
   const getChatUserById = async (userId) => {
     if(!userId) return;
     try {

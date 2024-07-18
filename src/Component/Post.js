@@ -19,7 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Post = ({setPostRender, postId, postImg, profileImg, desc, userName, createdAt, commentCount}) => {
+const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, userName, createdAt, commentCount}) => {
 
     const [showMore, setShowMore] = useState(false)
     const [like, setLike] = useState(false)
@@ -119,11 +119,11 @@ const Post = ({setPostRender, postId, postImg, profileImg, desc, userName, creat
     <>
         <div className='w-[70%] m-auto flex flex-col my-[2rem] shadow-2xl p-3'>
             <div className='h-[20%]'>
-              <ShowProfile profileImg={profileImg}  userName={userName} name_time={createdAt} button={<button  className='text-4xl pb-6'>...</button>} />
+              <ShowProfile getPostData={getPostData} postId={postId} profileImg={profileImg}  userName={userName} name_time={createdAt} button={<button  className='text-4xl pb-6'>...</button>} />
             </div>
             {/* =====post image==== */}
           <div className='h-[90%]'>
-            <img src={postImg} alt="" className="h-full w-full object-cover object-center" / >
+            <img src={postImg} alt="" className="h-full w-full object-cover object-center" />
           </div>  
           {/* ========post btn ====== */}
 
