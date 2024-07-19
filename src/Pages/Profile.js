@@ -5,7 +5,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import axios from "axios";
 import {Puff} from "react-loader-spinner";
 import { useParams } from "react-router-dom";
-import { GlobalUserData } from "../App";
+import  {GlobalUserData} from "../App";
 
 const Profile = () => {
 
@@ -17,6 +17,10 @@ const Profile = () => {
   const [fullName, setFullName] = useState("")
   const [userName, setUserName] = useState("")
   const [bio, setBio] = useState("")
+  const [postCount, setPostCount] = useState("")
+  const [followingCount, setFollowingCount] = useState("")
+  const [followerCount, setFollowerCount] = useState("")
+  const [isFollow, setIsFollow] = useState(false)
   const {userId} = useParams()
   const userDatas = useContext(GlobalUserData);
   console.log(userDatas?.userobject?.id)
@@ -41,7 +45,7 @@ const Profile = () => {
     getupdatedProfile()
   }, [userProfileId, userId])
   
-  // ==================update profile data api ===================
+  // ==================update profile data api ================================
 
   const updateProfile = async (e)=>{
     // console.log(e.target.files[0])
@@ -69,21 +73,24 @@ const Profile = () => {
     }catch(err){
       console.log(err.message);
     }
-
-
   }
 
-  // ================== getupdated profile data api ===================
+  // ================== getupdated profile data api ===========================
 
   const getupdatedProfile = async ()=>{
     try{
       setLoader(true)
-      await axios(`${apiUrl}/getProfileData/${userProfileId}`)
+      await axios(`${apiUrl}/getProfileData/${userProfileId}/userid=${userDatas?.userobject?.id}`)
       .then((res)=>{
         setUpdateImgUrl(res?.data?.result?.imageUrl)
         setFullName(res?.data?.result?.fullName)
         setUserName(res?.data?.result?.userName)
         setBio(res?.data?.result?.bio)
+        setPostCount(res?.data?.result?.postCount)
+        setFollowingCount(res?.data?.result?.followingCount)
+        setFollowerCount(res?.data?.result?.followerCount)
+        setIsFollow(res?.data?.result?.isFollow)
+
       })
       .catch((err)=>{
         console.log(err.message)
@@ -98,6 +105,22 @@ const Profile = () => {
     getupdatedProfile()
   },[updateImgUrl, userId])
 
+  // =================================follow unfollow apis ====================
+
+  const addFollow = async ()=>{
+    await axios.post(`${apiUrl}/addFollow/userId=${userDatas?.userobject?.id}/followingId=${userId}`)
+      .then((res)=>{
+        console.log("follow successfully")
+        getupdatedProfile()
+      })
+  }
+  const deleteFollow = async ()=>{
+    await axios.delete(`${apiUrl}/deleteFollow/userId=${userDatas?.userobject?.id}/followingId=${userId}`)
+      .then((res)=>{
+        console.log("follow successfully")
+        getupdatedProfile()
+      })
+  }
 
   return (
     <>
@@ -132,8 +155,12 @@ const Profile = () => {
               <button className="bg-slate-300 rounded-md font-semibold px-3 py-2">
                 Edit Profile
               </button> 
-              : 
-              <button className="bg-slate-300 rounded-md font-semibold px-3 py-2">
+              : isFollow !== null?
+              <button className="bg-slate-300 rounded-md font-semibold px-3 py-2" onClick={deleteFollow} >
+                UnFollow
+              </button> 
+              :
+              <button className="bg-slate-300 rounded-md font-semibold px-3 py-2" onClick={addFollow} >
                 Follow
               </button> 
               }
@@ -142,15 +169,15 @@ const Profile = () => {
             <div className="mt-5">
               <span className="me-2">
                 {" "}
-                <span className="font-medium">5</span> posts
+                <span className="font-medium">{postCount}</span> posts
               </span>
               <span className="mx-2">
                 {" "}
-                <span className="font-medium">50M</span> followers
+                <span className="font-medium">{followerCount}</span> followers
               </span>
               <span className="mx-2">
                 {" "}
-                <span className="font-medium">10</span> following
+                <span className="font-medium">{followingCount}</span> following
               </span>
             </div>
 
@@ -192,9 +219,6 @@ const Profile = () => {
             </div>
               ))
             }
-
-            
-
 
           </div>
         </div>
