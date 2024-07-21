@@ -6,25 +6,66 @@ import axios from "axios";
 import {Puff} from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 import  {GlobalUserData} from "../App";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Swal from "sweetalert2";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Profile = () => {
 
   const apiUrl = process.env.REACT_APP_MAIN_URL;
-  const [updateImgUrl, setUpdateImgUrl] = useState("")
-  const [loader, setLoader] = useState(false)
-  const [userProfileId, setUserProfileId] = useState(null)
-  const [userPosts, setUserPosts] = useState([])
-  const [fullName, setFullName] = useState("")
-  const [userName, setUserName] = useState("")
-  const [bio, setBio] = useState("")
-  const [postCount, setPostCount] = useState("")
-  const [followingCount, setFollowingCount] = useState("")
-  const [followerCount, setFollowerCount] = useState("")
-  const [isFollow, setIsFollow] = useState(false)
-  const {userId} = useParams()
+  const [updateImgUrl, setUpdateImgUrl] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [userProfileId, setUserProfileId] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [bio, setBio] = useState("");
+  const [postCount, setPostCount] = useState("");
+  const [followingCount, setFollowingCount] = useState("");
+  const [followerCount, setFollowerCount] = useState("");
+  const [isFollow, setIsFollow] = useState(false);
+  const {userId} = useParams();
   const userDatas = useContext(GlobalUserData);
-  console.log(userDatas?.userobject?.id)
-  console.log(userId)
+  const [open, setOpen] = React.useState(false);
+  const [updatedFormData, setUpdateFormData] = useState({});
+
+  const profileFormData = (name, value) => {
+    // name?.text;
+    setUpdateFormData({ ...updatedFormData, [name]: value });
+  };
+
+  useEffect(()=>{
+    setUpdateFormData({
+      userId,
+      userName,
+      fullName,
+      bio
+    })
+  },[userName, fullName, bio, userDatas?.userobject?.id ])
+
+  const updateUserProfileData = async ()=>{
+    await axios.patch(`${apiUrl}/updateUserProfileData` , updatedFormData)
+      .then((res)=>{
+        Swal.fire({
+          title: "Data update Successfully",
+          icon: "success"
+        });
+        getupdatedProfile()
+        handleClose()
+      })
+      .catch((err)=>{
+        console.log(err.message)
+      })
+  }
 
   useEffect(()=>{
     setUserProfileId(userId);
@@ -41,8 +82,8 @@ const Profile = () => {
   }
   
   useEffect(() => {
-    getPostsByPostId()
-    getupdatedProfile()
+    getPostsByPostId();
+    getupdatedProfile();
   }, [userProfileId, userId])
   
   // ==================update profile data api ================================
@@ -122,6 +163,17 @@ const Profile = () => {
       })
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setUpdateFormData({})
+    setOpen(false);
+  };
+
+
+
   return (
     <>
       <div className="max-w-[900px] w-[90%] m-auto pb-10">
@@ -152,7 +204,7 @@ const Profile = () => {
               <p className="font-medium text-[1.2rem]">{userName}</p>
               {
                 userDatas?.userobject?.id == userId ? 
-              <button className="bg-slate-300 rounded-md font-semibold px-3 py-2">
+              <button className="bg-slate-300 rounded-md font-semibold px-3 py-2" onClick={handleClickOpen}>
                 Edit Profile
               </button> 
               : isFollow !== null?
@@ -171,11 +223,11 @@ const Profile = () => {
                 {" "}
                 <span className="font-medium">{postCount}</span> posts
               </span>
-              <span className="mx-2">
+              <span className="mx-2 cursor-pointer">
                 {" "}
                 <span className="font-medium">{followerCount}</span> followers
               </span>
-              <span className="mx-2">
+              <span className="mx-2 cursor-pointer">
                 {" "}
                 <span className="font-medium">{followingCount}</span> following
               </span>
@@ -223,6 +275,28 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        maxWidth="md"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Update your Profile Data"}</DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col gap-6 py-3">
+          <TextField id="standard-basic" required value={updatedFormData.userName} onChange={(e)=>profileFormData("userName", e.target.value)} label="userName" focused />
+          <TextField id="standard-basic"  value={updatedFormData.fullName} onChange={(e)=>profileFormData("fullName", e.target.value)} label="fullName" focused />
+          <TextField multiline id="standard-basic"  value={updatedFormData.bio} onChange={(e)=>profileFormData("bio", e.target.value)} label="bio" focused />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleClose}>Close</Button>
+          <Button variant="outlined" onClick={updateUserProfileData}>Update</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

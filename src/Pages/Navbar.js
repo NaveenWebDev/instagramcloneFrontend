@@ -20,6 +20,7 @@ import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
+import Drawer from '@mui/material/Drawer';
 
 const Navbar = () => {
   const [isHidden, setIsHidden] = useState(false);
@@ -33,6 +34,13 @@ const Navbar = () => {
   const [imageType, setImageType] = useState();
   const [postImg, setPostImage] = useState();
   const [loader, setLoader] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -41,9 +49,22 @@ const Navbar = () => {
     userDatas.setToken("");
   };
 
-  // if (!userDatas) {
-  //   return null; // or some loading state
-  // }
+  useEffect(()=>{
+    const fetchData = async()=>{
+
+      await axios.get(`${apiUrl}/searchUser/userName=${searchQuery}`)
+      .then((res)=>{
+        setSearchResult(res?.data?.result)
+        console.log(res.data.result)
+      })
+      .catch((err)=>{
+        console.log(err.message)
+      });
+    };
+      if (searchQuery) {
+        fetchData();
+      }
+  },[searchQuery])
 
   // =============================modal code==========================
 
@@ -60,10 +81,10 @@ const Navbar = () => {
     overflow:"auto"
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const [opens, setOpens] = React.useState(false);
+  const handleOpen = () => setOpens(true);
   const handleClose = () => {
-    setOpen(false);
+    setOpens(false);
     setImageName("");
     setUploadedFileName("");
     setDescription("")
@@ -133,19 +154,43 @@ const Navbar = () => {
           </li>
           <li>
             <span>
-              <div className="flex items-center cursor-pointer">
+              <div className="flex items-center cursor-pointer" >
                 {" "}
                 <SearchOutlinedIcon
                   sx={{ fontSize: "35px", marginRight: "0.5rem" }}
+                  onClick={toggleDrawer(true)}
                 />
-                <span className="hidden md:block">Search</span>
+                <span className="hidden md:block" onClick={toggleDrawer(true)} >Search</span>
+                <Drawer open={open} onClose={toggleDrawer(false)}>
+                  <h2 className="mx-20 my-5 font-semibold text-3xl">Search</h2>
+
+                  <TextField id="standard-basic" value={searchQuery} type="serach" label="Search" variant="standard" onChange={(e)=>setSearchQuery(e.target.value)} />
+
+                  <hr />
+                  
+                  <div className="my-5">
+                  
+                  {
+                    searchResult.map((val, ind)=>(
+                  <div className="flex items-center gap-3 border-b my-2 p-2">
+                    <Avatar alt="Remy Sharp" src={val?.imageUrl} />
+                     <div>
+                        <p>{val?.userName}</p>
+                        <p>{val?.fullName}</p>
+                      </div>
+                    </div>
+                    ))
+                  }
+                  </div>
+
+                </Drawer>
+
               </div>
             </span>
           </li>
           <li>
             <NavLink to="/explore">
               <div className="flex items-center">
-                {" "}
                 <ExploreOutlinedIcon
                   sx={{ fontSize: "35px", marginRight: "0.5rem" }}
                 />{" "}
@@ -239,7 +284,7 @@ const Navbar = () => {
       </nav>
 
       <Modal
-        open={open}
+        open={opens}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

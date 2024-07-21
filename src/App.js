@@ -43,8 +43,8 @@ function App() {
 
   return (
     <GlobalUserData.Provider value={{token, setToken , userobject }}>
+      <ToastContainer/>
       <div className="z-50">
-      <ToastContainer />
       </div>
       <div className="flex justify-between overflow-x-hidden -z-30">
         {token?

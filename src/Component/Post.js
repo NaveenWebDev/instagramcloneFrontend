@@ -15,6 +15,7 @@ import Picker from 'emoji-picker-react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,6 +33,7 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
     const [open, setOpen] = React.useState(false);
     const apiUrl = process.env.REACT_APP_MAIN_URL;
     const navigate = useNavigate();
+    const [commentLoader, setCommentLoader] = React.useState(false);
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -90,7 +92,6 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
     };
 
     const addComment = async()=>{
-
       const payload = {
         postId,
         userId:userobject?.id,
@@ -98,15 +99,25 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
         profileImg:userobject?.imageUrl,
         userName:userobject?.userName
       }
-
+      if(comment.length > 0){
+      setCommentLoader(true)
       await axios.post(`${apiUrl}/addComment`, payload)
         .then((res)=>{
-          toast.success("comment add successfully")
+          toast.success("comment add successfully", {
+            position:"bottom-right"
+          })
           setPostRender(res)
           setComment("")
+          setCommentLoader(false)
         })
 
+      }else{
+        toast.error("comment Required", {
+          position:"bottom-right"
+        })
+      }
     }
+
     const getComment = async(myPostId)=>{
 
       await axios.get(`${apiUrl}/getComment/postId/${myPostId}`)
@@ -115,7 +126,6 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
         })
 
     }
-
 
   return (
     <>
@@ -186,7 +196,9 @@ const Post = ({setPostRender, getPostData, postId, postImg, profileImg, desc, us
                 {showPicker && <Picker style={{position:"absolute", top:"-950%", right:"0%"}} onEmojiClick={onEmojiClick} />}
 
                 <Button onClick={addComment} variant="contained" endIcon={<SendIcon />}>
-                    Send
+                    {
+                      commentLoader ? <CircularProgress sx={{color:"white"}} /> : "Send"
+                    } 
                 </Button>
 
             </div>

@@ -15,6 +15,8 @@ const Home = () => {
       })
   }
 
+  console.log(postData)
+
   useEffect(()=>{
     getPostData()
   },[postRender])

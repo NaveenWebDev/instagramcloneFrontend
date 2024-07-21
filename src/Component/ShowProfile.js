@@ -18,11 +18,13 @@ const ShowProfile = ({postId, onClick, profileImg, userName, name_time, button ,
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log(userobject?.userName)
+  console.log(userName)
 
   const deletePost = async () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You won't delete this post",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -70,7 +72,7 @@ const ShowProfile = ({postId, onClick, profileImg, userName, name_time, button ,
             </p>
           </div>
         </div>
-        <button onClick={handleClick} className="text-blue-500 text-sm cursor-pointer">{userobject?.userName == userName ?  button : null}
+        <button onClick={handleClick} className="text-blue-500 text-sm cursor-pointer">{userobject?.userName === userName ?  button : null}
         </button>
         <Menu
         id="basic-menu"
