@@ -18,8 +18,10 @@ const Chats = () => {
   const [chatData, setChatData] = useState();
   const [socketData, setSocketData] = useState("")
   const chatEndRef = useRef(null);
+  const [chatPhone, setChatPhone] = useState(false)
 
   const socket = useMemo(() => io('http://localhost:4000'), [])
+
 
   // jinke saat chat hoga ye wo api hai 
   const getChatUser = async () => {
@@ -104,7 +106,6 @@ const Chats = () => {
         // updateHeight();
         receiveChat();
       // }, 100);
-
   }, [currentChatUserId, receiverId]);
 
   useEffect(() => {
@@ -130,12 +131,13 @@ const Chats = () => {
 
   return (
     <>
-      {/* <div className='relative border border-red-800 h-screen'> */}
-      <div className="h-screen fixed left-[23%] max-w-[1050px] w-[100%]">
+      <div className="h-screen fixed left-[23%] max-w-[1050px] -z-10 w-[100%]">
         <div className="flex">
-          <div className="w-[30%] border h-screen">
-            <p className="font-bold text-3xl text-center p-5">
-              naveenSharma8266
+          <div className={`m:w-[30%] border h-screen shrink-0 ${chatPhone?"hidden":"block"} md:block`}>
+            <p className="font-bold text-2xl text-center p-5">
+              {
+                userobject?.userName
+              }
             </p>
             {chatUserData.map((user, ind) => (
               user?.id === userobject.id? null :
@@ -145,17 +147,18 @@ const Chats = () => {
                 userName={user?.userName}
                 setCurrentChatUserData={setCurrentChatUserData}
                 recentMessage={"recent message aya"}
+                setChatPhone={setChatPhone}
               />
             ))}
           </div>
-          <div className="w-[70%] h-screen relative p-2">
+          <div className={`lg:w-[100%] min-w-[300px] w-[300px] h-screen relative p-2 bg-slate-100 ${chatPhone?"block":"hidden"} `}>
             {!currentChatUserId ? (
               <div className="h-full flex justify-center flex-col items-center font-black text-3xl ">
                 <MessageIcon sx={{ height: "150px", width: "150px" }} />
-                <p>Send Your Message With Your Friends</p>
+                <p className="text-center"> Send Your Message With Your Friends</p>
               </div>
             ) : (
-              <div className="h-full w-full relative flex flex-col justify-between">
+              <div className="h-full w-full relative flex bg-slate-300 flex-col justify-between">
                 <div className="border-b border-b-gray-500">
                   {UserDataForChatById.map((val, ind) => (
                     <ChatProfile
@@ -169,13 +172,13 @@ const Chats = () => {
                 </div>
                 {/* ////////////////chats///////////////////////// */}
 
-                <div className="h-full flex flex-col p-5 gap-3 overflow-auto">
+                <div className="h-full flex flex-col p-5 gap-3 overflow-auto bg-slate-100">
                   {chatData?.length > 0 ? ( 
                     chatData.map((val, ind) => (
                       <span
                         key={ind}
-                        className={`bg-slate-300 rounded-lg inline-block w-fit max-w-[60%] p-1 ${
-                          val.userId == userobject.id ? "self-end" : null
+                        className={`bg-slate-300 rounded-lg inline-block w-fit max-w-[60%] p-2 ${
+                          val.userId == userobject.id ? "self-end bg-cyan-400" : null
                         } `}
                       >
                         {val?.chat}
@@ -192,7 +195,7 @@ const Chats = () => {
                   placeholder="enter your message"
                   required
                   id="text"
-                  className=" rounded-2xl border border-gray-500 p-2 inline-block w-full"
+                  className=" border border-gray-500 p-2 inline-block w-full"
                   onChange={(e) => setChat(e.target.value)}
                   value={chat}
                   onKeyDown={(e) => sendChat(e)}

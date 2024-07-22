@@ -1,12 +1,12 @@
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
 
-const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData, recentMessage} ) => {
+const ChatProfile = ( {id, imageUrl, userName, setCurrentChatUserData, recentMessage, setChatPhone} ) => {
   return (
     <>
         <div 
         className=' hover:bg-slate-200 cursor-pointer'
-        onClick={()=>setCurrentChatUserData(id)}
+        onClick={()=>{setCurrentChatUserData(id); setChatPhone(true)}}
         >
             <div className='p-3 flex items-center'>
                 <div className='w-[20]'>

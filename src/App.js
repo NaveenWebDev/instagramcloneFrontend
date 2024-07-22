@@ -56,7 +56,7 @@ function App() {
           className={` ${
             locate.pathname === "/profile/:userId" || locate.pathname === "/profile/:userId" || locate.pathname === "/messages"
               ? "w-[100%] left-[10%]"
-              : "w-[80%] md:w-[50%] left-[10%] md:left-[23%]"
+              : "w-[90%] md:w-[50%] left-[20%] md:left-[23%]"
           } relative  `}
         >
           <Routes>

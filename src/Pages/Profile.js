@@ -200,7 +200,7 @@ const Profile = () => {
             }
           </div>
           <div className="p-10 w-[70%]">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 flex-col md:flex-row">
               <p className="font-medium text-[1.2rem]">{userName}</p>
               {
                 userDatas?.userobject?.id == userId ? 
@@ -218,24 +218,24 @@ const Profile = () => {
               }
             </div>
 
-            <div className="mt-5">
+            <div className="mt-5 flex flex-col items-center md:flex-row">
               <span className="me-2">
                 {" "}
-                <span className="font-medium">{postCount}</span> posts
+                <span className="font-medium">{postCount} posts</span> 
               </span>
               <span className="mx-2 cursor-pointer">
                 {" "}
-                <span className="font-medium">{followerCount}</span> followers
+                <span className="font-medium">{followerCount} followers </span> 
               </span>
               <span className="mx-2 cursor-pointer">
                 {" "}
-                <span className="font-medium">{followingCount}</span> following
+                <span className="font-medium">{followingCount} following</span> 
               </span>
             </div>
 
             <div>
               <p className="font-medium my-2">{fullName}</p>
-              <p className="h-[100px] overflow-auto text-gray-400">
+              <p className="h-[100px] text-center overflow-auto text-gray-400">
                 {bio}
               </p>
             </div>

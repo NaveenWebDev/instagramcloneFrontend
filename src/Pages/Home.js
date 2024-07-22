@@ -13,6 +13,9 @@ const Home = () => {
       .then((res)=>{
         setPostData(res?.data?.result)
       })
+      .catch((err)=>{
+        console.log(err.message)
+      })
   }
 
   console.log(postData)
