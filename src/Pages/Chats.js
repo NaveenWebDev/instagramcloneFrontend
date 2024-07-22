@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import ChatProfile from "../Component/ChatProfile";
 import MessageIcon from "@mui/icons-material/Message";
 import axios from "axios";
@@ -17,6 +17,7 @@ const Chats = () => {
   const [chat, setChat] = useState("");
   const [chatData, setChatData] = useState();
   const [socketData, setSocketData] = useState("")
+  const chatEndRef = useRef(null);
 
   const socket = useMemo(() => io('http://localhost:4000'), [])
 
@@ -50,6 +51,10 @@ const Chats = () => {
 
   // =========================send chat ========================
 
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const sendChat = async (e) => {
     try {
       if (e.key == "Enter") {
@@ -75,6 +80,10 @@ const Chats = () => {
       console.log(err.message);
     }
   };
+
+  useEffect(()=>{
+    scrollToBottom()
+  },[chat, socketData, chatData])
 
   const receiveChat = async () => {
     await axios(
@@ -161,8 +170,7 @@ const Chats = () => {
                 {/* ////////////////chats///////////////////////// */}
 
                 <div className="h-full flex flex-col p-5 gap-3 overflow-auto">
-                  {/* <span>hoo jaa</span> */}
-                  {chatData?.length > 0 ? ( // Check if chatData has elements
+                  {chatData?.length > 0 ? ( 
                     chatData.map((val, ind) => (
                       <span
                         key={ind}
@@ -171,6 +179,7 @@ const Chats = () => {
                         } `}
                       >
                         {val?.chat}
+                      <div ref={chatEndRef} />
                       </span>
                     ))
                   ) : (

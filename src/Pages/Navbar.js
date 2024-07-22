@@ -172,7 +172,7 @@ const Navbar = () => {
                   
                   {
                     searchResult.map((val, ind)=>(
-                  <div className="flex items-center gap-3 border-b my-2 p-2">
+                  <div key={val?.id} onClick={()=>navigate(`/profile/${val?.id}`)} className="flex items-center gap-3 cursor-pointer border-b my-2 p-2">
                     <Avatar alt="Remy Sharp" src={val?.imageUrl} />
                      <div>
                         <p>{val?.userName}</p>
