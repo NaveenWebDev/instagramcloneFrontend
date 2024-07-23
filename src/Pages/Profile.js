@@ -75,6 +75,7 @@ const Profile = () => {
       await axios(`${apiUrl}/getPostsByPostId/userId=${userProfileId}`)
         .then((res)=>{
           setUserPosts(res?.data?.result)
+          console.log("page working hai getpostbyostId")
         })
         .catch((err)=>{
           console.log(err?.message)

@@ -20,7 +20,7 @@ const Chats = () => {
   const chatEndRef = useRef(null);
   const [chatPhone, setChatPhone] = useState(false)
 
-  const socket = useMemo(() => io('http://localhost:4000'), [])
+  const socket = useMemo(() => io(`https://instagramclonebackend-bd3d.onrender.com`), [])
 
 
   // jinke saat chat hoga ye wo api hai 
